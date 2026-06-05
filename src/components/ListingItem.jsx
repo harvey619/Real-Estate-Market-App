@@ -3,15 +3,23 @@ import { ReactComponent as DeleteIcon } from '../assets/svg/deleteIcon.svg'
 import bedIcon from '../assets/svg/bedIcon.svg'
 import bathtubIcon from '../assets/svg/bathtubIcon.svg'
 import {ReactComponent as EditIcon} from '../assets/svg/editIcon.svg'
+import { resolveImage, handleImageError } from '../utils/images'
 
 
 function ListingItem({ listing, id, onDelete,onEdit }) {
 
-    
+
   return (
       <li className='categoryListing'>
           <Link to={`/category/${listing.type}/${id}`} className='categoryListingLink'>
-              <img src={listing.imageUrls[0]} alt={listing.name} className="categoryListingImg" />
+              <div className="categoryListingImgWrap">
+                <img
+                  src={resolveImage(listing.imageUrls?.[0], id)}
+                  onError={handleImageError(id)}
+                  alt={listing.name}
+                  className="categoryListingImg"
+                />
+              </div>
               <div className="categoryListingDetails">
                   <p className="categoryListingLocation">{listing.location}</p>
                   <p className="categoryListingName">{listing.name}</p>

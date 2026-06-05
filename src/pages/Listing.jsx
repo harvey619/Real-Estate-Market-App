@@ -9,6 +9,7 @@ import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.css'
+import { resolveImage, handleImageError } from '../utils/images'
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 function Listing() {
@@ -50,14 +51,14 @@ function Listing() {
       <Swiper pagination={true}>
         {listing?.imageUrls.map((url, index) => (
           <SwiperSlide key={index}>
-            <div
-              className='swiperSlideDiv'
-              style={{
-                background: `url(${url}) center no-repeat`,
-                backgroundSize: 'cover',
-                height: '300px', // Adjust the height as needed
-              }}
-            ></div>
+            <div className='swiperSlideDiv' style={{ height: '340px' }}>
+              <img
+                src={resolveImage(url, params.listingId + index)}
+                onError={handleImageError(params.listingId + index)}
+                alt={listing.name}
+                className='swiperSlideImg'
+              />
+            </div>
           </SwiperSlide>
         ))}
             </Swiper>
@@ -74,6 +75,7 @@ function Listing() {
             
             {shareLinkCopied && <p className="linkCopied">Link Copied</p>}
             <div className="listingDetails">
+              <div className="listingDetailsCard">
                 <p className="listingName">{listing.name} - ${
                     listing.offer ?
                         listing.discountedPrice
@@ -82,16 +84,20 @@ function Listing() {
                         : listing.regularPrice
                             .toString()
                             .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                }</p>
+                }{listing.type === 'rent' && ' / month'}</p>
                 <p className="listingLocation">{listing.location}</p>
-                <p className="listingType">
-                    For {listing.type==='rent' ? 'Rent' : 'Sale'}
-                </p>
-                {listing.offer && (
-                    <p className="discountPrice">
-                        ${listing.regularPrice - listing.discountedPrice} discount
-                    </p>
-                )}
+                <div className="listingBadges">
+                  <span className="listingType">
+                      For {listing.type==='rent' ? 'Rent' : 'Sale'}
+                  </span>
+                  {listing.offer && (
+                      <span className="discountPrice">
+                          ${(listing.regularPrice - listing.discountedPrice)
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')} discount
+                      </span>
+                  )}
+                </div>
                 <ul className="listingDetailsList">
                     <li>
                         {listing.bedrooms>1?`${listing.bedrooms} Bedrooms`:'1 Bedroom'}
@@ -121,9 +127,10 @@ function Listing() {
                 {auth.currentUser?.uid !== listing.userRef && (
                     <Link to={`/contact/${listing.userRef}?listingName=${listing.name}`}
                         className="primaryButton">
-                        Contact Landlord
+                        Contact Owner
                     </Link>
                 )}
+              </div>
             </div>
         </main>
     )

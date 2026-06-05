@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { collection, getDocs,query,where,orderBy,limit,startAfter } from "firebase/firestore"
 import { db } from "../firebase.config"
 import { toast } from "react-toastify"
-import Spinner from "../components/Spinner"
 import { useParams } from "react-router-dom"
 import ListingItem from "../components/ListingItem"
+import ListingSkeleton from "../components/ListingSkeleton"
 
 
 function Offers() {
@@ -89,7 +89,7 @@ function Offers() {
           </p>
             </header>
             
-            {loading ? <Spinner /> : listings && listings.length > 0 ? (
+            {loading ? <ListingSkeleton /> : listings && listings.length > 0 ? (
                 <>
                     <main>
                         <ul className="categoryListings">

@@ -6,6 +6,8 @@ import Offers from './pages/Offers'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import Navbar from './components/Navbar'
+import Header from './components/Header'
+import Footer from './components/Footer'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import PrivateRoute from './components/PrivateRoute'
@@ -20,6 +22,8 @@ function App() {
   return (
     <>
       <Router>
+        <Header />
+        <div className="appMain">
         <Routes>
           <Route path="/" element={<Explore />} />
           <Route path="/profile" element={<PrivateRoute />}>
@@ -35,6 +39,8 @@ function App() {
           <Route path='/create-listing' element={<CreateListing />} />
           <Route path = '/edit-listing/:listingId' element = {<EditListing/>} />
         </Routes>
+        </div>
+        <Footer />
         {<Navbar/>}
       </Router>
       <ToastContainer/>
